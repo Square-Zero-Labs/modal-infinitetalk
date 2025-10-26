@@ -164,12 +164,26 @@ class Model:
             
             
             # Helper function to download files with proper error handling
-            def download_file(repo_id: str, filename: str, local_path: Path, revision: str = None, description: str = None) -> None:
+            def download_file(
+                repo_id: str,
+                filename: str,
+                local_path: Path,
+                revision: str = None,
+                description: str = None,
+                subfolder: str | None = None,
+            ) -> None:
                 """Download a single file with error handling and logging."""
-                if local_path.exists():
+                relative_path = Path(filename)
+                if subfolder:
+                    relative_path = Path(subfolder) / relative_path
+                download_path = local_path.parent / relative_path
+
+                if download_path.exists():
                     print(f"--- {description or filename} already present ---")
                     return
                 
+                download_path.parent.mkdir(parents=True, exist_ok=True)
+
                 print(f"--- Downloading {description or filename}... ---")
                 try:
                     hf_hub_download(
@@ -177,6 +191,7 @@ class Model:
                         filename=filename,
                         revision=revision,
                         local_dir=local_path.parent,
+                        subfolder=subfolder,
                     )
                     print(f"--- {description or filename} downloaded successfully ---")
                 except Exception as e:
@@ -309,8 +324,9 @@ class Model:
                 # Download FusioniX LoRA weights (will create FusionX_LoRa directory)
                 download_file(
                     repo_id="vrgamedevgirl84/Wan14BT2VFusioniX",
-                    filename="FusionX_LoRa/Wan2.1_I2V_14B_FusionX_LoRA.safetensors",
+                    filename="Wan2.1_I2V_14B_FusionX_LoRA.safetensors",
                     local_path=model_root / "FusionX_LoRa" / "Wan2.1_I2V_14B_FusionX_LoRA.safetensors",
+                    subfolder="FusionX_LoRa",
                     description="FusioniX LoRA weights",
                 )
                 
@@ -463,7 +479,7 @@ class Model:
             quant_dir=None,  # Using non-quantized model for LoRA support
             wav2vec_dir=str(model_root / "chinese-wav2vec2-base"),
             dit_path=None,
-            lora_dir=[str(model_root / "FusionX_LoRa" / "Wan2.1_I2V_14B_FusionX_LoRA.safetensors")],
+            lora_dir=[str(model_root / "FusionX_LoRa" / "FusionX_LoRa" / "Wan2.1_I2V_14B_FusionX_LoRA.safetensors")],
             lora_scale=[1.0],
             offload_model=False,
             ulysses_size=1,
