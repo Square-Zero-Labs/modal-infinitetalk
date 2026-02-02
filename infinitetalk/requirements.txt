@@ -13,7 +13,7 @@ scikit-image
 loguru
 gradio>=5.0.0
 numpy>=1.23.5,<2
-xfuser>=0.4.1
+xfuser==0.4.1
 pyloudnorm
 optimum-quanto==0.2.6
 scenedetect
