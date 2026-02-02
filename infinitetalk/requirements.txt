@@ -1,6 +1,7 @@
 opencv-python>=4.9.0.80
-diffusers>=0.31.0
-transformers>=4.49.0
+diffusers==0.35.2
+transformers==4.49.0
+sentencepiece>=0.1.99
 tokenizers>=0.20.3
 accelerate>=1.1.1
 tqdm
@@ -13,7 +14,7 @@ scikit-image
 loguru
 gradio>=5.0.0
 numpy>=1.23.5,<2
-xfuser>=0.4.1
+xfuser==0.4.4
 pyloudnorm
 optimum-quanto==0.2.6
 scenedetect
